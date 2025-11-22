@@ -26,7 +26,7 @@ export class PuzzleSolver {
 
         // Try the quick method first
         if (progressCallback) {
-            progressCallback({ status: 'Trying A* algorithm...', progress: 5 });
+            progressCallback({ status: 'Trying the fast method first...', progress: 5 });
         }
 
         try {
@@ -36,9 +36,9 @@ export class PuzzleSolver {
             console.log('A* hit a wall, switching to the backup plan...');
         }
 
-        // Use the slower but more thorough algorithm
+        // Use the slower but more thorough method
         if (progressCallback) {
-            progressCallback({ status: 'Switching to IDA* algorithm...', progress: 10 });
+            progressCallback({ status: 'Trying a different approach...', progress: 10 });
         }
 
         try {
@@ -62,7 +62,7 @@ export class PuzzleSolver {
         return bfsResult;
     }
 
-    // Asynchronous A* implementation with progress updates
+    // A* search that can pause and update progress
     async aStarAsync(start, goal, targetBoard, progressCallback) {
         const openSet = new PriorityQueue();
         const closedSet = new Set();
@@ -83,7 +83,7 @@ export class PuzzleSolver {
 
         const startKey = this.stateToNumber(start);
         const goalKey = this.stateToNumber(goal);
-        const initialHeuristic = this.enhancedHeuristic(start);
+        const initialHeuristic = this.manhattanHeuristic(start);
 
         openSet.enqueue(start, initialHeuristic);
         gScore.set(startKey, 0);
@@ -113,7 +113,7 @@ export class PuzzleSolver {
                 
                 if (progressCallback) {
                     const current = openSet.peek();
-                    const currentHeuristic = current ? this.enhancedHeuristic(current) : 0;
+                    const currentHeuristic = current ? this.manhattanHeuristic(current) : 0;
                     
                     progressCallback({
                         status: `A* searching... (${Math.floor(elapsed/1000)}s)`,
@@ -150,7 +150,7 @@ export class PuzzleSolver {
             if (closedSet.has(currentKey)) continue;
             closedSet.add(currentKey);
 
-            const neighbors = this.getNeighborsOptimized(current);
+            const neighbors = this.getNeighbors(current);
             const currentGScore = gScore.get(currentKey) || 0;
             
             // Prune neighbors that are clearly too far
@@ -162,7 +162,7 @@ export class PuzzleSolver {
                 if (closedSet.has(neighborKey)) continue;
 
                 const tentativeGScore = currentGScore + 1;
-                const heuristic = this.enhancedHeuristic(neighbor);
+                const heuristic = this.manhattanHeuristic(neighbor);
                 
                 // Prune if estimated total cost is too high
                 if (tentativeGScore + heuristic > maxDepth) continue;
@@ -182,10 +182,10 @@ export class PuzzleSolver {
         throw new Error('A* failed');
     }
 
-    // IDA* (Iterative Deepening A*) for memory-efficient solving
+    // Try IDA* search when A* uses too much memory
     async idaStarAsync(start, goal, targetBoard, progressCallback) {
         const goalKey = this.stateToNumber(goal);
-        let threshold = this.enhancedHeuristic(start);
+        let threshold = this.manhattanHeuristic(start);
         const startTime = Date.now();
         const maxTime = 6000; // Increased to 6 seconds for IDA*
         let iteration = 0;
@@ -230,7 +230,7 @@ export class PuzzleSolver {
     }
     
     async idaSearch(state, g, threshold, goalKey, visited, progressCallback) {
-        const f = g + this.enhancedHeuristic(state);
+        const f = g + this.manhattanHeuristic(state);
         
         if (f > threshold) return f;
         
@@ -248,7 +248,7 @@ export class PuzzleSolver {
         }
         
         let min = Infinity;
-        const neighbors = this.getNeighborsOptimized(state);
+        const neighbors = this.getNeighbors(state);
         
         for (const neighbor of neighbors) {
             const neighborKey = this.stateToNumber(neighbor);
@@ -270,8 +270,8 @@ export class PuzzleSolver {
         return min;
     }
 
-    // Enhanced heuristic with linear conflicts
-    enhancedHeuristic(state) {
+    // Calculate distance using Manhattan distance plus some extras
+    manhattanHeuristic(state) {
         let distance = 0;
         let conflicts = 0;
         
@@ -338,8 +338,8 @@ export class PuzzleSolver {
         return distance;
     }
 
-    // Optimized neighbor generation
-    getNeighborsOptimized(state) {
+    // Find all possible moves from this state
+    getNeighbors(state) {
         const neighbors = [];
         const emptyIndex = state.emptyIndex;
         const emptyRow = Math.floor(emptyIndex / this.size);
@@ -547,17 +547,17 @@ export class PuzzleSolver {
         console.log('Guided BFS starting, goal key:', goalKey);
         
         // Start with initial state
-        queue.enqueue({ state: start, path: [] }, this.enhancedHeuristic(start));
+        queue.enqueue({ state: start, path: [] }, this.manhattanHeuristic(start));
         visited.add(startKey);
         
         let iterations = 0;
-        let bestHeuristic = this.enhancedHeuristic(start);
+        let bestHeuristic = this.manhattanHeuristic(start);
         
         while (!queue.isEmpty() && iterations < maxStates) {
             iterations++;
             const elapsed = Date.now() - startTime;
             
-            // Yield every 100 iterations for better performance
+            // Take a break every 100 tries so the page doesn't freeze
             if (iterations % 100 === 0) {
                 if (progressCallback) {
                     progressCallback({
@@ -577,12 +577,12 @@ export class PuzzleSolver {
             
             const { state, path } = queue.dequeue();
             const currentKey = this.stateToNumber(state);
-            const currentHeuristic = this.enhancedHeuristic(state);
+            const currentHeuristic = this.manhattanHeuristic(state);
             
             // Track best heuristic seen
             if (currentHeuristic < bestHeuristic) {
                 bestHeuristic = currentHeuristic;
-                console.log('Improved heuristic to', bestHeuristic, 'at depth', path.length);
+                console.log('Found a closer state:', bestHeuristic, 'at depth', path.length);
             }
             
             // Check if we've reached the goal
@@ -599,14 +599,14 @@ export class PuzzleSolver {
                 continue;
             }
             
-            const neighbors = this.getNeighborsOptimized(state);
+            const neighbors = this.getNeighbors(state);
             
             for (const neighbor of neighbors) {
                 const neighborKey = this.stateToNumber(neighbor);
                 
                 if (!visited.has(neighborKey)) {
                     visited.add(neighborKey);
-                    const neighborHeuristic = this.enhancedHeuristic(neighbor);
+                    const neighborHeuristic = this.manhattanHeuristic(neighbor);
                     
                     // Use f = g + h for priority (A* style)
                     queue.enqueue({
@@ -623,7 +623,7 @@ export class PuzzleSolver {
     }
 }
 
-// Efficient priority queue implementation for A*
+// Simple priority queue for the search methods
 class PriorityQueue {
     constructor() {
         this.elements = [];

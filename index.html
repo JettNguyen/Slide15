@@ -13,8 +13,12 @@
             <h1>Sliding Number Puzzle</h1>
             <p class="subtitle">Get the numbers in order!</p>
             <div class="header-controls">
-                <a href="solver.html" class="btn btn-tertiary btn-small">Puzzle Solver</a>
-                <button id="customize-colors-btn" class="btn btn-tertiary btn-small">Change Colors</button>
+                <a href="solver.html" class="btn btn-tertiary btn-small">
+                    <i class="fas fa-brain"></i> Puzzle Solver
+                </a>
+                <button id="customize-colors-btn" class="btn btn-tertiary btn-small">
+                    <i class="fas fa-palette"></i> Change Colors
+                </button>
             </div>
         </header>
 
@@ -28,8 +32,9 @@
                 </div>
 
                 <div class="controls">
-                    <button id="shuffle-btn" class="btn btn-primary">Shuffle</button>
-                    <button id="reset-btn" class="btn btn-secondary">Reset</button>
+                    <button id="shuffle-btn" class="btn btn-primary">
+                        <i class="fas fa-random"></i> New Puzzle
+                    </button>
                 </div>
             </div>
 
@@ -37,7 +42,11 @@
         </main>
 
         <footer>
-            <p id="tutorial-trigger" class="tutorial-link">Drag tiles around to solve the puzzle!</p>
+            <div class="footer-content">
+                <button id="tutorial-trigger" class="tutorial-link">
+                    <i class="fas fa-question-circle"></i> How to Play
+                </button>
+            </div>
         </footer>
     </div>
 
@@ -74,8 +83,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="reset-colors-btn" class="btn btn-secondary">Reset to Default</button>
-                <button id="save-colors-btn" class="btn btn-primary">Apply Colors</button>
+                <button id="reset-colors-btn" class="btn btn-secondary">
+                    <i class="fas fa-refresh"></i> Reset to Default
+                </button>
+                <button id="save-colors-btn" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Apply Colors
+                </button>
             </div>
         </div>
     </div>
@@ -104,8 +117,9 @@
 
             </div>
             <div class="modal-footer">
-                <button id="play-again-btn" class="btn btn-primary">Play Again</button>
-                <button id=\"new-challenge-btn\" class=\"btn btn-secondary\">New Challenge</button>\n                <button id=\"close-win-modal\" class=\"btn btn-tertiary\">Close</button>
+                <button id="play-again-btn" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Play Again
+                </button>
             </div>
         </div>
     </div>
@@ -115,7 +129,9 @@
         <div class="modal-content tutorial-modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-graduation-cap"></i> How to Play</h2>
-                <button id="close-tutorial-modal" class="close-btn">&times;</button>
+                <button id="close-tutorial-modal" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body tutorial-body">
                 <div class="tutorial-section">
@@ -163,13 +179,15 @@
                     <ul>
                         <li>Start by getting the top row (1-4) in place</li>
                         <li>Work row by row from top to bottom</li>
-                        <li>The fewer moves you use, the better your score!</li>
+                        <li>Try to solve it in as few moves as possible!</li>
                         <li>Some configurations may take many moves to solve</li>
                     </ul>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="got-it-btn" class="btn btn-primary">Got It!</button>
+                <button id="got-it-btn" class="btn btn-primary">
+                    <i class="fas fa-thumbs-up"></i> Got It!
+                </button>
             </div>
         </div>
     </div>

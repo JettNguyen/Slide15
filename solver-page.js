@@ -243,7 +243,7 @@ class EditableBoard {
         
         document.addEventListener('mouseup', handleMouseUp);
 
-        // Also keep click functionality as backup
+        // Also keep click support just in case
         this.boardElement.addEventListener('click', (e) => {
             const tile = e.target.closest('.tile');
             if (!tile) return;
@@ -278,7 +278,7 @@ class EditableBoard {
 
     randomize() {
         // Start with solved board and perform random valid moves
-        // This ensures solvability and is much faster than checking inversions
+        // This makes sure the puzzle can be solved
         const board = this.createSolvedBoard();
         const moves = 50 + Math.floor(Math.random() * 100); // 50-150 random moves
         
@@ -340,7 +340,7 @@ class SolutionVisualizer {
         this.currentState = board;
         this.render();
         
-        // Ensure all tiles have proper transitions
+        // Make sure all tiles can animate smoothly
         const tiles = this.boardElement.querySelectorAll('.tile');
         tiles.forEach(tile => {
             if (!tile.style.transition) {
@@ -357,7 +357,7 @@ class SolutionVisualizer {
         this.currentState = fromState;
         this.render();
         
-        // Short delay to ensure from state is visible
+        // Wait a moment so the starting state shows up
         await new Promise(resolve => setTimeout(resolve, 100 / (this.parent?.speedMultiplier || 1)));
         
         // Find and highlight the moving tile
@@ -385,7 +385,7 @@ class SolutionVisualizer {
         this.currentState = toState;
         this.render();
         
-        // Wait for the transition to complete
+        // Wait for the move to finish
         await new Promise(resolve => setTimeout(resolve, 350 / (this.parent?.speedMultiplier || 1)));
         
         // Clean up the moving tile effects
@@ -482,24 +482,25 @@ class SolverPageController {
         this.currentStepIndex = 0;
         this.isPlaying = false;
         this.playInterval = null;
+        this.speedMultiplier = 1.0; // Start with normal speed
         
-        this.initialize();
+        this.setup();
     }
 
-    initialize() {
-        // Initialize boards
+    setup() {
+        // Set up the puzzle boards
         this.initialBoard = new EditableBoard(document.getElementById('initial-board'));
         this.targetBoard = new EditableBoard(document.getElementById('target-board'));
         this.solutionVisualizer = new SolutionVisualizer(document.getElementById('solution-board'), this);
         
-        // Initialize theme
-        this.initializeTheme();
+        // Set up the colors
+        this.setupTheme();
         
         // Attach event listeners
         this.attachEventListeners();
     }
 
-    initializeTheme() {
+    setupTheme() {
         // Load saved custom colors
         this.loadCustomColors();
         
@@ -775,8 +776,12 @@ class SolverPageController {
         // Speed control
         const speedSlider = document.getElementById('speed-slider');
         if (speedSlider) {
+            // Set initial speed multiplier from slider value
+            this.speedMultiplier = parseFloat(speedSlider.value) || 1.0;
+            document.getElementById('speed-display').textContent = `${this.speedMultiplier.toFixed(1)}x`;
+            
             speedSlider.addEventListener('input', (e) => {
-                this.speedMultiplier = parseFloat(e.target.value);
+                this.speedMultiplier = parseFloat(e.target.value) || 1.0;
                 document.getElementById('speed-display').textContent = `${this.speedMultiplier.toFixed(1)}x`;
             });
         }
@@ -825,17 +830,18 @@ class SolverPageController {
             return;
         }
 
-        // Show we're working on it
+        // Show loading modal and disable solve button
         const solveBtn = document.getElementById('solve-btn');
         const originalText = solveBtn.innerHTML;
         solveBtn.disabled = true;
         
-        // Show progress bar
-        this.showProgressDisplay();
-
+        this.showLoadingModal();
+        
         try {
+            const startTime = Date.now();
+            
             const moves = await this.solver.solve(initialState, targetState, (progress) => {
-                this.updateProgress(progress);
+                this.updateLoadingProgress(progress, startTime);
             });
             
             const steps = this.solver.getSolutionSteps(moves);
@@ -850,14 +856,83 @@ class SolverPageController {
                 })))
             };
 
-            this.hideProgressDisplay();
+            this.hideLoadingModal();
             this.displaySolution();
         } catch (error) {
-            this.hideProgressDisplay();
+            this.hideLoadingModal();
             this.showNotification('Solver Error', `Oops! ${error.message}`);
         } finally {
             solveBtn.innerHTML = originalText;
             solveBtn.disabled = false;
+        }
+    }
+
+    // Show loading modal with animated spinner
+    showLoadingModal() {
+        const modal = document.getElementById('loading-modal');
+        modal.style.display = 'flex';
+        
+        // Reset progress indicators
+        this.updateLoadingProgress({
+            percentage: 0,
+            nodesExplored: 0,
+            currentDepth: 0,
+            phase: 'Initializing solver...'
+        }, Date.now());
+        
+        // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Hide loading modal
+    hideLoadingModal() {
+        const modal = document.getElementById('loading-modal');
+        modal.style.display = 'none';
+        
+        // Restore background scrolling
+        document.body.style.overflow = 'auto';
+    }
+
+    // Update loading progress with real-time data
+    updateLoadingProgress(progress, startTime) {
+        const percentage = Math.min(100, Math.max(0, progress.percentage || 0));
+        const nodesExplored = progress.nodesExplored || 0;
+        const currentDepth = progress.currentDepth || 0;
+        const phase = progress.phase || 'Solving...';
+        
+        // Update progress bar
+        const progressFill = document.getElementById('solve-progress-fill');
+        if (progressFill) {
+            progressFill.style.width = `${percentage}%`;
+        }
+        
+        // Update percentage display
+        const percentageElement = document.getElementById('progress-percentage');
+        if (percentageElement) {
+            percentageElement.textContent = `${percentage.toFixed(1)}%`;
+        }
+        
+        // Update progress details
+        const detailsElement = document.getElementById('progress-details');
+        if (detailsElement) {
+            detailsElement.textContent = phase;
+        }
+        
+        // Update solving stats
+        const nodesElement = document.getElementById('nodes-explored');
+        if (nodesElement) {
+            nodesElement.textContent = nodesExplored.toLocaleString();
+        }
+        
+        const depthElement = document.getElementById('current-depth');
+        if (depthElement) {
+            depthElement.textContent = currentDepth;
+        }
+        
+        const timeElement = document.getElementById('elapsed-time');
+        if (timeElement && startTime) {
+            const elapsedSeconds = (Date.now() - startTime) / 1000;
+            timeElement.textContent = `${elapsedSeconds.toFixed(1)}s`;
         }
     }
 
@@ -919,7 +994,7 @@ class SolverPageController {
             stepsContainer.appendChild(stepEl);
         });
         
-        // Add CSS for enhanced step visualization
+        // Add some CSS to make the steps look nicer
         this.addStepStyles();
     }
     
@@ -1136,9 +1211,13 @@ class SolverPageController {
     
     async playWithAnimation() {
         if (!this.isPlaying || !this.currentSolution) return;
-        
+
         for (let step = this.currentStepIndex + 1; step <= this.currentSolution.steps.length; step++) {
             if (!this.isPlaying) break;
+            
+            // Update step counter BEFORE starting the animation
+            this.currentStepIndex = step;
+            this.updateStepTracking();
             
             const prevState = this.currentSolution.states[step - 1];
             const nextState = this.currentSolution.states[step];
@@ -1154,19 +1233,14 @@ class SolverPageController {
             } else {
                 // Fallback to regular display
                 this.solutionVisualizer.displayState(this.solver.stateToArray(nextState));
-                await new Promise(resolve => setTimeout(resolve, 800 / this.speedMultiplier));
+                await new Promise(resolve => setTimeout(resolve, 800 / (this.speedMultiplier || 1.0)));
             }
-            
-            this.currentStepIndex = step;
-            this.updateStepTracking();
         }
-        
+
         if (this.isPlaying) {
             this.stopPlaying();
         }
-    }
-
-    stopPlaying() {
+    }    stopPlaying() {
         this.isPlaying = false;
         document.getElementById('play-solution-btn').innerHTML = '▶ Play';
         // No need to clear interval since we're using async/await now
@@ -1301,7 +1375,7 @@ class SolverPageController {
         
         document.getElementById('current-step').textContent = this.currentStepIndex;
         
-        // Update step list with completed/active states
+        // Update step list to show which ones are done
         const stepItems = document.querySelectorAll('.step-item');
         stepItems.forEach((item, i) => {
             item.classList.remove('active', 'completed');
@@ -1396,7 +1470,7 @@ class SolverPageController {
     }
 }
 
-// Initialize when DOM is ready
+// Start everything when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new SolverPageController();
 });

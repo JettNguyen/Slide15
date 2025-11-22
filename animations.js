@@ -335,7 +335,7 @@ export class AnimationController {
         }
     }
 
-    // Completely rebuild the board (for new puzzles)
+    // Start over with a fresh board (when making new puzzles)
     rebuild() {
         this.createAllTiles();
     }

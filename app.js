@@ -56,7 +56,7 @@ class PuzzleGame {
         //start with a shuffled puzzle
         this.puzzle.shuffle();
         
-        // Initialize the game state for a shuffled start
+        // Set up the game state for a fresh start
         const puzzleState = this.puzzle.getState();
         this.initialState = [];
         
@@ -77,8 +77,7 @@ class PuzzleGame {
     wireUpButtons() {
         const buttons = {
             'shuffle-btn': () => this.shufflePuzzle(),
-            'reset-btn': () => this.resetPuzzle(), 
-            'customize-colors-btn': () => this.openColorPicker(),
+            'customize-colors-btn': () => this.openColorModal(),
             'tutorial-trigger': () => this.openTutorial()
         };
 
@@ -94,15 +93,15 @@ class PuzzleGame {
         this.setupTutorialModal();
     }
 
-    //mix things up randomly
+    //mix things up randomly - creates a new random puzzle
     shufflePuzzle() {
         this.puzzle.shuffle();
         
-        // Get the linear board state that the solver expects
+        // Store this shuffled state for any systems that might need it
         const puzzleState = this.puzzle.getState();
         this.initialState = [];
         
-        // Convert 2D board to flat array for solver
+        // Convert 2D board to flat array
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 4; col++) {
                 this.initialState.push(puzzleState.board[row][col]);
@@ -113,25 +112,7 @@ class PuzzleGame {
         this.gameInProgress = true;
         this.hasUserInteracted = false;
         this.animations.rebuild();
-        console.log('Shuffled - ready for solving');
-    }
-
-    //start over with solved puzzle
-    resetPuzzle() {
-        console.log('Resetting...');
-        this.puzzle.reset();
-        this.startTime = null;
-        this.gameInProgress = false;
-        this.initialState = null;
-        this.hasUserInteracted = false;
-        this.animations.rebuild();
-        
-        // Auto-shuffle after reset for immediate play
-        setTimeout(() => {
-            this.shufflePuzzle();
-        }, 500);
-        
-        console.log('Reset and shuffled');
+        console.log('New random puzzle generated');
     }
 
     //update move count
@@ -186,7 +167,6 @@ class PuzzleGame {
         const modal = document.getElementById('win-modal');
         const closeBtn = document.getElementById('close-win-modal');
         const playAgainBtn = document.getElementById('play-again-btn');
-        const newChallengeBtn = document.getElementById('new-challenge-btn');
         
         const closeModal = () => {
             modal.style.display = 'none';
@@ -200,11 +180,6 @@ class PuzzleGame {
         playAgainBtn.onclick = () => {
             closeModal();
             this.shufflePuzzle();
-        };
-        
-        newChallengeBtn.onclick = () => {
-            closeModal();
-            this.resetPuzzle();
         };
     }
 
@@ -275,8 +250,25 @@ class PuzzleGame {
                 this.applyColors(colors);
             } catch (error) {
                 console.log('Couldnt load saved colors');
+                // If there's an error parsing saved colors, apply defaults
+                this.applyDefaultColors();
             }
+        } else {
+            // If no saved colors, apply the default color scheme
+            this.applyDefaultColors();
         }
+    }
+
+    // Apply default colors without affecting color picker inputs
+    applyDefaultColors() {
+        const defaults = {
+            bg: '#262626',
+            boardBg: '#3c3c3c',
+            oddTile: '#2b2ba8',
+            evenTile: '#d76b19',
+            text: '#f8f9fa'
+        };
+        this.applyColors(defaults);
     }
 
     // Put saved colors back into the color picker inputs
@@ -391,7 +383,7 @@ class PuzzleGame {
         // Show tutorial for first-time users
         const hasSeenTutorial = localStorage.getItem('tutorial-seen') === 'true';
         if (!hasSeenTutorial) {
-            setTimeout(() => this.openTutorial(), 500); // Small delay for better UX
+            setTimeout(() => this.openTutorial(), 500); // Wait a bit before showing the tutorial
         }
     }
     
