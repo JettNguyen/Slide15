@@ -88,6 +88,10 @@ class EditableBoard {
     }
 
     attachListeners() {
+        // Prevent default touch behaviors on the board
+        this.boardElement.style.touchAction = 'none';
+        
+        // Mouse down handler
         this.boardElement.addEventListener('mousedown', (e) => {
             const tile = e.target.closest('.tile');
             if (!tile) return;
@@ -107,11 +111,34 @@ class EditableBoard {
             e.preventDefault();
         });
 
-        document.addEventListener('mousemove', (e) => {
+        // Touch start handler
+        this.boardElement.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const tile = e.target.closest('.tile');
+            if (!tile) return;
+            
+            const touch = e.touches[0];
+            
+            this.draggedElement = tile;
+            this.draggedIndex = parseInt(tile.dataset.index);
+            this.isDragging = false;
+            this.startX = touch.clientX;
+            this.startY = touch.clientY;
+            
+            // Store initial transform
+            this.initialTransform = tile.style.transform || '';
+            
+            tile.style.zIndex = '1000';
+        }, { passive: false });
+
+        // Common drag handler for both mouse and touch
+        const handleDragMove = (clientX, clientY) => {
             if (!this.draggedElement) return;
             
-            const deltaX = e.clientX - this.startX;
-            const deltaY = e.clientY - this.startY;
+            const deltaX = clientX - this.startX;
+            const deltaY = clientY - this.startY;
             
             // Start dragging if moved more than 5px
             if (!this.isDragging && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
@@ -135,12 +162,12 @@ class EditableBoard {
                 const currentX = baseX + deltaX;
                 const currentY = baseY + deltaY;
                 
-                // Apply transform to follow mouse
+                // Apply transform to follow mouse/touch
                 this.draggedElement.style.transform = `translate(${currentX}px, ${currentY}px)`;
                 
                 // Check what's under the dragged tile
                 this.draggedElement.style.pointerEvents = 'none';
-                const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
+                const elementUnderMouse = document.elementFromPoint(clientX, clientY);
                 this.draggedElement.style.pointerEvents = '';
                 
                 const targetTile = elementUnderMouse?.closest('.tile');
@@ -212,7 +239,24 @@ class EditableBoard {
                     this.lastHoveredTile = null;
                 }
             }
+        };
+
+        // Mouse move handler
+        document.addEventListener('mousemove', (e) => {
+            handleDragMove(e.clientX, e.clientY);
         });
+
+        // Touch move handler
+        document.addEventListener('touchmove', (e) => {
+            if (!this.draggedElement) return;
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                handleDragMove(touch.clientX, touch.clientY);
+            }
+        }, { passive: false });
 
         const handleMouseUp = (e) => {
             if (!this.draggedElement) return;
@@ -242,6 +286,18 @@ class EditableBoard {
         };
         
         document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('touchend', (e) => {
+            if (!this.draggedElement) return;
+            e.preventDefault();
+            e.stopPropagation();
+            handleMouseUp(e);
+        }, { passive: false });
+        document.addEventListener('touchcancel', (e) => {
+            if (!this.draggedElement) return;
+            e.preventDefault();
+            e.stopPropagation();
+            handleMouseUp(e);
+        }, { passive: false });
 
         // Also keep click support just in case
         this.boardElement.addEventListener('click', (e) => {
