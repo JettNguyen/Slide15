@@ -10,7 +10,7 @@
     --accent-even-dark: #f29f51;
     --text-primary: #f8f9fa;
     --text-secondary: #e0e0e0;
-    --tile-size: 88px;
+    --tile-size: 80px;
     --gap: 5px;
     --board-padding: 10px;
 }
@@ -49,10 +49,10 @@ header {
 }
 
 header h1 {
-    font-size: 2.7rem;
-    margin-bottom: 11px;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
     color: var(--text-primary);
-    text-shadow: 2px 3px 9px rgba(0, 0, 0, 0.35);
+    text-shadow: 2px 3px 5px rgba(0, 0, 0, 0.5);
     font-weight: 650;
 }
 
@@ -71,7 +71,7 @@ header h1 {
 main {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 25px;
 }
 
 .game-section {
@@ -95,9 +95,9 @@ main {
     background: linear-gradient(147deg, var(--board-bg-dark), var(--board-bg-light)) !important;
     border-radius: 14px;
     box-shadow: 
-        inset 4px 5px 14px rgba(0, 0, 0, 0.5),
-        inset -4px -5px 13px rgba(255, 255, 255, 0.04),
-        0 9px 38px rgba(0, 0, 0, 0.58);
+        inset 4px 5px 15px rgba(0, 0, 0, 0.5),
+        inset -4px -5px 15px rgba(255, 255, 255, 0.1),
+        0 10px 35px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
     touch-action: none;
@@ -122,9 +122,9 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.9rem;
+    font-size: 2rem;
     font-weight: 680;
-    border-radius: 7px;
+    border-radius: 5px;
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
@@ -138,7 +138,7 @@ main {
 
 .tile.empty-tile {
     background: transparent;
-    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border: 2px dashed rgba(255, 255, 255, 0.25);
     color: transparent;
 }
 
@@ -149,7 +149,7 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 7px;
+    border-radius: 5px;
     background: linear-gradient(138deg, rgba(255, 255, 255, 0.28) 0%, transparent 52%, rgba(0, 0, 0, 0.18) 100%);
     pointer-events: none;
 }
@@ -160,11 +160,11 @@ main {
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-/* Only apply hover effects on devices that support hover (not touch screens) */
+/* Only apply hover effects on devices that support hover */
 @media (hover: hover) and (pointer: fine) {
     .tile.odd:hover {
         transform: scale(1.05);
-        box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.6);
+        box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.5);
     }
 }
 
@@ -187,23 +187,22 @@ main {
 }
 
 .tile.multi-selected {
-    outline: 3px solid rgba(255, 215, 0, 0.6);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 4px 4px 12px rgba(0, 0, 0, 0.5);
+    outline: 3px solid rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 4px 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .tile.animating {
     transition: transform 0.25s ease;
 }
 
-/* Better touch feedback for tiles */
 .tile:active {
     opacity: 0.9;
 }
 
 .move-counter {
     text-align: center;
-    margin-top: 16px;
-    padding: 12px 20px;
+    margin-top: 15px;
+    padding: 10px 20px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
     border-radius: 25px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -216,7 +215,7 @@ main {
     font-size: 1rem;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
 }
 
 .move-counter strong {
@@ -236,17 +235,17 @@ main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 20px;
-    font-size: 0.98rem;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
     font-weight: 600;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     -webkit-tap-highlight-color: transparent;
     user-select: none;
     -webkit-user-select: none;
@@ -259,7 +258,7 @@ main {
     font-weight: 700;
 }
 
-/* Add active state for mobile touch feedback */
+/* Active state for mobile touch feedback */
 .btn-primary:active {
     transform: scale(0.98);
     box-shadow: 0 1px 4px rgba(43, 43, 168, 0.2);
@@ -269,7 +268,7 @@ main {
     .btn-primary:hover {
         background: linear-gradient(135deg, var(--accent-odd-light) 0%, var(--accent-odd) 100%);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(43, 43, 168, 0.3);
+        box-shadow: 0 4px 12px rgba(43, 43, 168, 0.25);
     }
 }
 
@@ -280,13 +279,13 @@ main {
 .btn-secondary {
     background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-medium) 100%);
     color: var(--text-primary);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     font-weight: 600;
 }
 
 .btn-secondary:active {
     transform: scale(0.98);
-    box-shadow: 0 1px 4px rgba(43, 43, 168, 0.15);
+    box-shadow: 0 1px 4px rgba(43, 43, 168, 0.25);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -294,7 +293,7 @@ main {
         background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
         border: 1px solid var(--accent-odd);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(43, 43, 168, 0.2);
+        box-shadow: 0 4px 12px rgba(43, 43, 168, 0.25);
     }
 }
 
@@ -306,11 +305,13 @@ main {
     background: linear-gradient(135deg, var(--accent-even) 0%, var(--accent-even-dark) 100%);
     color: var(--bg-dark);
     font-weight: 600;
+    font-size: 1.0em;
+    margin: 10px;
 }
 
 .btn-tertiary:active {
     transform: scale(0.98);
-    box-shadow: 0 1px 4px rgba(215, 107, 25, 0.2);
+    box-shadow: 0 1px 4px rgba(215, 107, 25, 0.25);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -318,12 +319,8 @@ main {
         background: linear-gradient(135deg, var(--accent-even-dark) 0%, var(--accent-even) 100%);
         color: var(--bg-dark);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(215, 107, 25, 0.3);
+        box-shadow: 0 4px 12px rgba(215, 107, 25, 0.25);
     }
-}
-
-.btn-tertiary i {
-    font-size: 1.0em;
 }
 
 .btn:active {
@@ -333,17 +330,17 @@ main {
 
 .btn:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(43, 43, 168, 0.3);
+    box-shadow: 0 0 0 2px rgba(43, 43, 168, 0.25);
 }
 
 .btn-small {
-    padding: 8px 14px;
+    padding: 10px 15px;
     font-size: 0.85rem;
-    gap: 6px;
+    gap: 5px;
 }
 
 .btn-large {
-    padding: 16px 32px;
+    padding: 15px 30px;
     font-size: 1.1rem;
     font-weight: 700;
     gap: 10px;
@@ -357,13 +354,13 @@ main {
 .solve-button:hover {
     background: linear-gradient(135deg, var(--accent-odd-light) 0%, var(--accent-odd) 100%);
     box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.15);
+        0 4px 8px rgba(0, 0, 0, 0.25);
     transform: translateY(-3px);
 }
 
 .solve-button i {
     font-size: 1.3em;
-    color: #fff;
+    color: white;
 }
 
 .solver-layout {
@@ -387,7 +384,7 @@ main {
     padding: 20px;
     box-shadow: 
         inset 3px 3px 10px rgba(0, 0, 0, 0.5),
-        inset -3px -3px 10px rgba(255, 255, 255, 0.03),
+        inset -3px -3px 10px rgba(255, 255, 255, 0.25),
         0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -406,7 +403,7 @@ main {
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .input-group label {
@@ -415,10 +412,10 @@ main {
 }
 
 .board-input {
-    padding: 12px;
+    padding: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: 10px;
     color: var(--text-primary);
     font-size: 1rem;
     font-family: 'Courier New', monospace;
@@ -472,8 +469,8 @@ main {
 }
 
 .solution-steps {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
     padding: 15px;
     max-height: 300px;
     overflow-y: auto;
@@ -481,15 +478,15 @@ main {
 
 .step-item {
     padding: 10px;
-    margin-bottom: 8px;
-    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 5px;
     border-left: 3px solid transparent;
     transition: all 0.3s ease;
 }
 
 .step-item.active {
-    background: rgba(220, 20, 60, 0.2);
+    background: rgba(220, 20, 60, 0.25);
     border-left-color: var(--accent-odd-light);
 }
 
@@ -524,7 +521,7 @@ footer {
     font-size: 1rem;
     font-weight: 600;
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 10px 15px;
     border-radius: 20px;
     transition: all 0.3s ease;
     display: inline-flex;
@@ -536,9 +533,9 @@ footer {
 
 .tutorial-link:hover {
     color: var(--accent-even-dark);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(215, 107, 25, 0.2);
+    box-shadow: 0 4px 12px rgba(215, 107, 25, 0.25);
 }
 
 .game-hint {
@@ -549,17 +546,17 @@ footer {
 }
 
 .solution-steps::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 .solution-steps::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
 .solution-steps::-webkit-scrollbar-thumb {
     background: var(--accent-odd);
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
 .solution-steps::-webkit-scrollbar-thumb:hover {
@@ -654,24 +651,24 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    padding: 15px 0;
 }
 
 .stat-label {
     font-weight: 500;
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .stat-value {
     font-weight: 700;
     color: var(--accent-odd-light);
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .win-message {
     text-align: center;
-    padding: 18px 0;
+    padding: 15px 0;
     font-weight: 500;
     color: var(--text-primary);
     margin-bottom: 20px;
@@ -717,7 +714,7 @@ a:hover {
     font-size: 1.1rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .tutorial-content {
@@ -731,7 +728,7 @@ a:hover {
 }
 
 .tutorial-text p {
-    margin: 8px 0;
+    margin: 10px 0;
     color: var(--text-secondary);
     line-height: 1.4;
 }
@@ -743,12 +740,12 @@ a:hover {
 .mini-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
+    gap: 5px;
     width: 120px;
     height: 120px;
     background: var(--bg-dark);
-    border-radius: 8px;
-    padding: 8px;
+    border-radius: 10px;
+    padding: 10px;
 }
 
 .mini-board.solved {
@@ -759,7 +756,7 @@ a:hover {
 .mini-tile {
     background: var(--tile-bg);
     color: var(--tile-text);
-    border-radius: 4px;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -790,7 +787,7 @@ a:hover {
     font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .tutorial-tips ul {
@@ -800,7 +797,7 @@ a:hover {
 
 .tutorial-tips li {
     color: var(--text-secondary);
-    margin: 6px 0;
+    margin: 5px 0;
     padding-left: 10px;
     line-height: 1.3;
 }
@@ -917,9 +914,9 @@ a:hover {
 
 .progress-bar {
     width: 100%;
-    height: 12px;
+    height: 10px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
+    border-radius: 5px;
     overflow: hidden;
     margin-bottom: 10px;
     position: relative;
@@ -928,7 +925,7 @@ a:hover {
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--accent-odd), var(--accent-odd-light));
-    border-radius: 6px;
+    border-radius: 5px;
     width: 0%;
     transition: width 0.3s ease;
     position: relative;
@@ -971,7 +968,7 @@ a:hover {
 
 .solving-stats {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -980,8 +977,8 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    padding: 4px 0;
+    margin-bottom: 10px;
+    padding: 5px 0;
 }
 
 .stat-row:last-child {
@@ -1019,7 +1016,7 @@ a:hover {
     .spinner-ring {
         width: 48px;
         height: 48px;
-        border-width: 6px;
+        border-width: 5px;
     }
     
     .loading-title {
@@ -1054,7 +1051,7 @@ a:hover {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 15px;
-    padding: 12px 0;
+    padding: 15px 0;
 }
 
 .color-group label {
@@ -1067,7 +1064,7 @@ a:hover {
     width: 80px;
     height: 40px;
     border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -1091,7 +1088,7 @@ a:hover {
     }
     
     .container {
-        padding: 8px;
+        padding: 10px;
     }
     
     .tile {
@@ -1102,7 +1099,7 @@ a:hover {
 @media (max-width: 600px) {
     :root {
         --tile-size: 70px;
-        --gap: 6px;
+        --gap: 5px;
         --board-padding: 15px;
     }
     
@@ -1146,7 +1143,7 @@ a:hover {
     height: 36px !important;
     min-height: 36px !important;
     padding: 6px 12px !important;
-    font-size: 13px !important;
+    font-size: 12px !important;
     margin: 0 3px !important;
     white-space: nowrap;
 }
@@ -1161,7 +1158,7 @@ a:hover {
     height: 34px !important;
     padding: 6px 10px !important;
     font-size: 12px !important;
-    margin: 3px !important;
+    margin: 2px !important;
 }
 
 .step-counter {
@@ -1202,23 +1199,23 @@ a:hover {
 
 .progress-bar {
     width: 100%;
-    height: 14px;
+    height: 15px;
     background: var(--bg-dark);
     border-radius: 7px;
     overflow: hidden;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--accent-odd), var(--accent-odd-light));
-    border-radius: 7px;
+    border-radius: 8px;
     transition: width 0.4s ease;
     width: 0%;
 }
 
 .progress-status {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-secondary);
     text-align: center;
     min-height: 18px;
@@ -1291,7 +1288,7 @@ a:hover {
 
 .step-navigation {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -1302,9 +1299,9 @@ a:hover {
     justify-content: center;
     gap: 10px;
     margin: 10px 0;
-    padding: 8px 16px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
     border: 1px solid var(--accent-odd);
 }
 
@@ -1316,9 +1313,9 @@ a:hover {
 
 .speed-slider {
     width: 120px;
-    height: 6px;
+    height: 5px;
     background: var(--bg-dark);
-    border-radius: 3px;
+    border-radius: 5px;
     outline: none;
     appearance: none;
     -webkit-appearance: none;
@@ -1371,7 +1368,7 @@ a:hover {
 
 .board-actions {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     margin-top: 15px;
     justify-content: center;
     flex-wrap: wrap;
@@ -1464,7 +1461,7 @@ a:hover {
     
     .board-controls {
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
         margin-top: 15px;
     }
     
@@ -1500,12 +1497,6 @@ a:hover {
         flex-wrap: wrap;
     }
     
-    :root {
-        --tile-size: 80px;
-        --gap: 7px;
-        --board-padding: 12px;
-    }
-    
     .controls {
         display: flex;
         gap: 15px;
@@ -1534,8 +1525,6 @@ a:hover {
     }
 }
 
-
-/* Step counter and step item layout fixes */
 .step-item.completed {
     background: rgba(40, 167, 69, 0.15);
     border-left-color: #28a745;
