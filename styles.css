@@ -306,11 +306,10 @@ main {
     color: var(--bg-dark);
     font-weight: 600;
     font-size: 1.0em;
-    margin: 10px;
+    margin: 5px;
 }
 
 .btn-tertiary:active {
-    transform: scale(0.98);
     box-shadow: 0 1px 4px rgba(215, 107, 25, 0.25);
 }
 
@@ -334,9 +333,8 @@ main {
 }
 
 .btn-small {
-    padding: 10px 15px;
-    font-size: 0.85rem;
-    gap: 5px;
+    padding: 15px 35px;
+    font-size: 1rem;
 }
 
 .btn-large {
@@ -569,7 +567,7 @@ footer {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -586,7 +584,7 @@ footer {
     border: 2px solid var(--accent-odd);
     border-radius: 20px;
     width: 90%;
-    max-width: 700px;
+    max-width: 600px;
     max-height: 85vh;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -627,7 +625,6 @@ footer {
 .close-btn:hover {
     background: var(--accent-odd);
     color: var(--text-primary);
-    transform: rotate(90deg);
 }
 
 .modal-body {
@@ -705,12 +702,12 @@ a:hover {
 }
 
 .tutorial-section {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .tutorial-section h3 {
     color: var(--accent-odd-light);
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     font-size: 1.1rem;
     display: flex;
     align-items: center;
@@ -719,7 +716,7 @@ a:hover {
 
 .tutorial-content {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     align-items: flex-start;
 }
 
@@ -728,9 +725,8 @@ a:hover {
 }
 
 .tutorial-text p {
-    margin: 10px 0;
+    margin: 5px 0;
     color: var(--text-secondary);
-    line-height: 1.4;
 }
 
 .tutorial-demo {
@@ -749,8 +745,8 @@ a:hover {
 }
 
 .mini-board.solved {
-    width: 160px;
-    height: 160px;
+    width: 130px;
+    height: 130px;
 }
 
 .mini-tile {
@@ -777,29 +773,27 @@ a:hover {
 .tutorial-tips {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    padding: 10px;
+    padding: 15px;
     border: 1px solid var(--accent-odd);
 }
 
 .tutorial-tips h4 {
     color: var(--accent-odd-light);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
 }
 
 .tutorial-tips ul {
     margin: 0;
-    padding-left: 20px;
+    padding-left: 30px;
 }
 
 .tutorial-tips li {
     color: var(--text-secondary);
     margin: 5px 0;
-    padding-left: 10px;
-    line-height: 1.3;
 }
 
 @media (max-width: 768px) {
@@ -1074,10 +1068,10 @@ a:hover {
 }
 
 .modal-footer {
-    padding: 20px 30px;
+    padding-bottom: 20px;
     display: flex;
     gap: 15px;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 @media (max-width: 480px) {
